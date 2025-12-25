@@ -8,6 +8,10 @@ interface Message {
   text: string
 } 
 
+const WS_URL = import.meta.env.PROD
+    ? "wss://chat-app-l6fi.onrender.com"
+    : "ws://localhost:3000"
+
 
 function App() {
   const [message, setMessage] = useState<string>('')
@@ -26,7 +30,7 @@ function App() {
   useEffect(() => {
     if (!user) return
 
-    const ws = new WebSocket("ws://localhost:3000");
+    const ws = new WebSocket(WS_URL);
 
     ws.onopen = () => {
       console.log("Connected to websocket server")
