@@ -11,7 +11,7 @@ const server = http.createServer((req, res) => {
             res.writeHead(404)
             res.end("Not found")
         } else {
-            res.writeHead(200, {"Content-Type": "text/plain"})
+            res.writeHead(200)
             res.end(content)
         }
     })
@@ -42,7 +42,6 @@ wss.on("connection", (ws) => {
 
     ws.on("close", () => {
         console.log("Client disconnected")
-        ws.send("Connection closed")
     })
 })
 
