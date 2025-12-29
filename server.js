@@ -2,6 +2,7 @@ const http = require("http")
 const {WebSocketServer} = require ("ws")
 const fs = require("fs")
 const path = require("path")
+const mime = require("mime-types")
 
 const server = http.createServer((req, res) => {
   let filePath = path.join(
@@ -10,22 +11,7 @@ const server = http.createServer((req, res) => {
     req.url === "/" ? "index.html" : req.url
   )
 
-  console.log("Instance started:", process.pid)
-
-
-  const ext = path.extname(filePath)
-
-  const contentTypeMap = {
-    ".html": "text/html",
-    ".js": "text/javascript",
-    ".css": "text/css",
-    ".json": "application/json",
-    ".png": "image/png",
-    ".jpg": "image/jpeg",
-    ".svg": "image/svg+xml",
-  }
-
-  const contentType = contentTypeMap[ext] || "application/octet-stream"
+  const contentType = mime.lookup(filePath) || "application/octet-stream"
 
   fs.readFile(filePath, (err, content) => {
     if (err) {
@@ -45,15 +31,17 @@ const wss = new WebSocketServer({server})
 wss.on("connection", (ws) => {
     console.log("Client connected to instance:", process.pid)
 
-
     ws.on("message", (data) => {
-        let message = JSON.parse(data)
+        let message
+
+        try {
+          message = JSON.parse(data)
+        } catch {
+          alert('Connection is lost.')
+        }
 
         if(message.type === "message") {
-            message = {
-                ...message,
-                timestamp: Date.now(),
-            }
+            message.imestamp = Date.now()
         }
 
         wss.clients.forEach((client) => {
