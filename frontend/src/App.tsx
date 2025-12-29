@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './App.css'
 
 interface Message {
@@ -18,31 +18,10 @@ function App() {
   const [messages, setMessages] = useState<Message[]>([])
   const [user, setUser] = useState<string | null>(null)
   const [socket, setSocket] = useState<WebSocket | null>(null)
-
-
-  useEffect(() => {
-    let username = prompt('Write you name') || ''
-    setUser(username)
-  }, [])
-
+  
+  const reconnectTimeoutRef = useRef<number | null>(null)
+  
   const getDateTime = (timestamp: number) => new Date(timestamp).toLocaleString('pl-PL')
-
-  useEffect(() => {
-    if (!user) return
-
-    const ws = new WebSocket(WS_URL);
-
-    ws.onopen = () => {
-      console.log("Connected to websocket server")
-    }
-
-    ws.onmessage = (msg) => {
-      console.log(msg)
-      setMessages((prev) => [...prev, JSON.parse(msg.data)])
-    }
-
-    setSocket(ws)
-  }, [user])
   
   const handleSendMessage = () => {
     const newMessage: Omit<Message, 'timestamp'> = {
@@ -54,6 +33,41 @@ function App() {
     socket?.send(JSON.stringify(newMessage))
     setMessage('')
   }
+  
+  useEffect(() => {
+    let username = prompt('Write you name') || ''
+    setUser(username)
+  }, [])
+
+  useEffect(() => {
+    if (!user) return
+
+    const connect = () => {
+      const ws = new WebSocket(WS_URL)
+      setSocket(ws)
+
+      ws.onopen = () => {
+        console.log("Connected to websocket server")
+      }
+
+      ws.onmessage = (msg) => {
+        console.log(msg)
+        setMessages((prev) => [...prev, JSON.parse(msg.data)])
+      }
+
+      ws.onclose = () => {
+        console.log("Connection lost, retrying...")
+        reconnectTimeoutRef.current = window.setTimeout(connect, 2000)
+      }
+      ws.onerror = () => {
+        WS_URL.toLocaleLowerCase()
+      }
+    }
+
+    connect()
+
+  }, [user])
+  
 
 
   return (

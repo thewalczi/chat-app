@@ -41,7 +41,7 @@ wss.on("connection", (ws) => {
         }
 
         if(message.type === "message") {
-            message.imestamp = Date.now()
+            message.timestamp = Date.now()
         }
 
         wss.clients.forEach((client) => {
