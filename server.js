@@ -10,6 +10,9 @@ const server = http.createServer((req, res) => {
     req.url === "/" ? "index.html" : req.url
   )
 
+  console.log("Instance started:", process.pid)
+
+
   const ext = path.extname(filePath)
 
   const contentTypeMap = {
@@ -40,7 +43,8 @@ const server = http.createServer((req, res) => {
 const wss = new WebSocketServer({server})
 
 wss.on("connection", (ws) => {
-    console.log("Client Connected.")
+    console.log("Client connected to instance:", process.pid)
+
 
     ws.on("message", (data) => {
         let message = JSON.parse(data)
