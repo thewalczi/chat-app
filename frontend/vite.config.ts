@@ -3,5 +3,10 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
+    plugins: [react()],
+    css: {
+        modules: {
+            generateScopedName: '[folder]__[local]_[hash:base64:5]'
+        }
+    }
 })

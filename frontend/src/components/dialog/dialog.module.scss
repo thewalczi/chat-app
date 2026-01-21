@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    max-width: 460px;
+    width: 100%;
+    gap: 16px;
+}
+
+.message {
+    &-wrapper {
+        flex: 1 1 auto;
+        overflow: auto;
+    }
+
+    &-list {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 16px;
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        height: 100%;
+    }
+
+    & {
+        background: #94b4c1;
+        padding: 12px;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        &-metadata {
+            display: flex;
+            justify-content: space-between;
+
+            > * {
+                margin: 0;
+            }
+        }
+    }
+}
+
+.footer {
+    textarea {
+        width: 100%;
+        height: 120px;
+        resize: none;
+    }
+}
