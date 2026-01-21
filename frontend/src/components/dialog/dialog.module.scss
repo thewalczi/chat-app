@@ -13,7 +13,7 @@
     }
 
     &-list {
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
         justify-content: flex-end;
         gap: 16px;
@@ -21,6 +21,7 @@
         padding: 0;
         margin: 0;
         height: 100%;
+        width: 100%;
     }
 
     & {
@@ -30,6 +31,7 @@
         display: flex;
         flex-direction: column;
         gap: 16px;
+        margin: 0 40px 0 0;
 
         &-metadata {
             display: flex;
@@ -38,6 +40,11 @@
             > * {
                 margin: 0;
             }
+        }
+
+        &_own {
+            background: #eae0cf;
+            margin: 0 0 0 40px;
         }
     }
 }

@@ -33,7 +33,6 @@ export const Chat = () => {
             }
 
             ws.onmessage = (msg) => {
-                console.log(msg)
                 setMessages((prev) => [...prev, JSON.parse(msg.data)])
             }
 
