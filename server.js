@@ -4,24 +4,19 @@ const fs = require('fs')
 const path = require('path')
 const mime = require('mime-types')
 
+const DIST_DIR = path.join(__dirname, 'frontend', 'dist')
+
 const server = http.createServer((req, res) => {
-    let filePath = path.join(
-        __dirname,
-        'dist',
-        req.url === '/' ? 'index.html' : req.url
-    )
+    let filePath = path.join(DIST_DIR, req.url === '/' ? 'index.html' : req.url)
 
     const contentType = mime.lookup(filePath) || 'application/octet-stream'
 
     fs.readFile(filePath, (err, content) => {
         if (err) {
-            fs.readFile(
-                path.join(__dirname, 'frontend', 'dist', 'index.html'),
-                (err, html) => {
-                    res.writeHead(200, { 'Content-Type': 'text/html' })
-                    res.end(html)
-                }
-            )
+            fs.readFile(path.join(DIST_DIR, 'index.html'), (err, html) => {
+                res.writeHead(200, { 'Content-Type': 'text/html' })
+                res.end(html)
+            })
         } else {
             res.writeHead(200, { 'Content-Type': contentType })
             res.end(content)
